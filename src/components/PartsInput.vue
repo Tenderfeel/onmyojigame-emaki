@@ -1,5 +1,5 @@
 <template>
-  <div class="pr-4">
+  <div class="">
     <div class="field">
       <label for="parts-small">欠片・小</label>
       <InputNumber id="parts-small" v-model="store.small" showButtons :step="1" :min="0" class="inputfield w-full" @input="store.save" />

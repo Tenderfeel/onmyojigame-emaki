@@ -1,9 +1,9 @@
 <template>
   <div class="w-full">
-    <div v-if="!active" class="flex align-items-center">
+    <div v-if="!active" class="grid align-items-center">
       <slot name="display" />
     </div>
-    <div v-if="active" class="flex align-items-center">
+    <div v-if="active" class="grid align-items-center">
       <slot name="content" />  
     </div>
   </div>

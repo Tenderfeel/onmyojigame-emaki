@@ -8,17 +8,17 @@
       <div v-if="!store.logs.length" style="color: var(--gray-200)">記録がありません</div>
 
       <template v-else>
-        <Inplace v-for="(log, index) in store.formatLogs" :key="index" :active="log.active">
+        <Inplace v-for="(log, index) in store.formatLogs" :key="index" :active="log.active" class="log">
           <template #display>
-            <div class="col">
+            <div class="col-12 md:col-5 pb-0 md:py-0">
               <FormatDate :value="log.date" class="mr-2" />
               <Tag v-if="log.server" severity="danger">{{log.server}}</Tag>
               <i v-if="log.charge" class="pi pi-credit-card mr-1 text-yellow-300"></i>
             </div>
-            <div class="col" :class="{'text-pink-200': log.used, 'text-yellow-300': log.charge }">小: {{log.small}}</div>
-            <div class="col" :class="{'text-pink-200': log.used, 'text-yellow-300': log.charge }">中: {{log.medium}}</div>
-            <div class="col" :class="{'text-pink-200': log.used, 'text-yellow-300': log.charge }">大: {{log.large}}</div>
-            <div class="mr-2">
+            <div class="col pt-0 md:py-0" :class="{'text-pink-200': log.used, 'text-yellow-300': log.charge }">小: {{log.small}}</div>
+            <div class="col pt-0 md:py-0" :class="{'text-pink-200': log.used, 'text-yellow-300': log.charge }">中: {{log.medium}}</div>
+            <div class="col pt-0 md:py-0" :class="{'text-pink-200': log.used, 'text-yellow-300': log.charge }">大: {{log.large}}</div>
+            <div class="col-fixed  pt-0 md:pt-2 mr-2">
               <!-- 編集ボタン -->
               <Button icon="pi pi-pencil" class="p-button-secondary p-button-outlined" @click="log.active = true" />
             </div>
@@ -206,3 +206,10 @@ export default defineComponent({
   }
 })
 </script>
+
+<style scoped lang="scss">
+.log + .log {
+  border-top: solid 1px var(--gray-700);
+  padding: .5rem 0 0;
+}
+</style>

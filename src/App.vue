@@ -10,11 +10,11 @@ import SiteFooter from './components/SiteFooter.vue'
 
 <template>
   <main class="p-4">
-    <div class="flex flex-row flex-wrap mb-4">
-      <div class="col-6 p-0">
-        <PartsInput />
+    <div class="grid mb-4">
+      <div class="col-12 md:col-6">
+        <PartsInput class="md:pr-4" />
       </div>
-      <div class="col-6 p-0">
+      <div class="col-12 md:col-6">
         <TotalPoint />
         <TotalToday class="mt-4" />
       </div>
