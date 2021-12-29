@@ -7,7 +7,7 @@
     <div class="flex">
       <div v-for="serv in Object.keys(store.server)" :key="serv" class="col flex align-items-center">
         <Tag :value="serv" severity="danger" class="mr-2" />
-        <span :style="{color: 'var(--pink-200)'}">{{store.server[serv]}}</span>
+        <span :style="{color: 'var(--pink-200)'}">{{store.server[parseInt(serv)]}}</span>
       </div>
     </div>
   </Panel>

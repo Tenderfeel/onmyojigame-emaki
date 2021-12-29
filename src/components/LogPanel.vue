@@ -50,7 +50,7 @@
               </div>
               <div class="mr-2">
               <!-- 閉じるボタン -->
-              <Button icon="pi pi-times" class="p-button-secondary p-button-outlined" @click="log.active = fales" />
+              <Button icon="pi pi-times" class="p-button-secondary p-button-outlined" @click="log.active = false" />
             </div>
             </div>
           </template>
