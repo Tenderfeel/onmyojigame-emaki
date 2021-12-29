@@ -88,16 +88,8 @@
           <Calendar v-model="chargeLog.date" :showTime="true" :showSeconds="true" dateFormat="yy-mm-dd" :showIcon="true" />
       </div>
       <div class="p-inputgroup mb-2">
-        <span class="p-inputgroup-addon">小</span>
-        <InputNumber id="parts-small" v-model="chargeLog.small" showButtons :step="1" :min="0" class="inputfield w-full" />
-      </div>
-      <div class="p-inputgroup mb-2">
         <span class="p-inputgroup-addon">中</span>
         <InputNumber id="parts-medium" v-model="chargeLog.medium" showButtons :step="1" :min="0" class="inputfield w-full" />
-      </div>
-      <div class="p-inputgroup mb-2">
-        <span class="p-inputgroup-addon">大</span>
-        <InputNumber id="parts-large" v-model="chargeLog.large" showButtons :step="1" :min="0" class="inputfield w-full" />
       </div>
       <template #footer>
         <Button label="Cancel" icon="pi pi-times" @click="closeChargeModal" class="p-button-text"/>
