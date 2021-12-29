@@ -1,6 +1,6 @@
 <template>
   <footer class="p-4 flex align-items-center justify-content-between">
-    <p class="text-sm">絵巻欠片計算機 <a href="https://twitter.com/vesperfeel" target="_blank" class="text-purple-400 no-underline">@vesperfeel</a></p>
+    <p class="text-sm">絵巻欠片計算機 <a href="https://twitter.com/vesperfeel" class="text-purple-400 no-underline">@vesperfeel</a></p>
     <Button aria-label="ログをリセット" icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-outlined" @click="resetConfirm()" />
   </footer>
   <ConfirmDialog></ConfirmDialog>
