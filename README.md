@@ -1,11 +1,25 @@
-# Vue 3 + Typescript + Vite
+# 絵巻欠片計算機v2
 
-This template should help get you started developing with Vue 3 and Typescript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+絵巻走りがてら[Codepenのモック](https://codepen.io/Tenderfeel/pen/WNwjyem)をVue3+Viteで作り直した。
 
-## Recommended IDE Setup
+https://onmyojigame-emaki.vercel.app/
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
 
-## Type Support For `.vue` Imports in TS
+## 追憶絵巻イベントの主な仕様
+大体は新式神追加と同時に開催される。（月末が多い）  
+イベント期間はメンテ後から2週間程度設けられているが、全絵巻の修復率が100%になった時点で終了する。  
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's `.vue` type support plugin by running `Volar: Switch TS Plugin on/off` from VSCode command palette.
+### 欠片の入手方法
+欠片・小は1日の獲得上限が50個、中と大には制限なし。  
+
+1. 各種ダンジョン（探索・覚醒・御霊・御霊）クリア時
+2. 結果突破勝利時
+3. 魂玉購入時（魂玉20ごとに中1個）
+4. 霊符召喚10回ごとに大1個
+5. 毎日任務経験値80で中1個
+
+### 欠片寄付ポイント
+
+- 大：100
+- 中：20
+- 小：10
