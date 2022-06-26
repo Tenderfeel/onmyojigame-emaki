@@ -4,6 +4,7 @@ import TotalPoint from './components/TotalPoint.vue'
 import TotalToday from './components/TotalToday.vue'
 import LogPanel from './components/LogPanel.vue'
 import SiteFooter from './components/SiteFooter.vue'
+import Toast from 'primevue/toast';
 </script>
 
 <template>
@@ -19,6 +20,7 @@ import SiteFooter from './components/SiteFooter.vue'
     </div>
     <LogPanel />
   </main>
+  <Toast position="bottom-right" />
   <SiteFooter />
 </template>
 

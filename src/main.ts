@@ -16,6 +16,10 @@ import Dropdown from 'primevue/dropdown';
 import Dialog from 'primevue/dialog';
 import ConfirmationService from 'primevue/confirmationservice';
 import ConfirmDialog from 'primevue/confirmdialog';
+import Tooltip from 'primevue/tooltip';
+import FileUpload from 'primevue/fileupload';
+import ToastService from 'primevue/toastservice';
+import OverlayPanel from 'primevue/overlaypanel';
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -23,6 +27,7 @@ const pinia = createPinia()
 app.use(pinia)
 app.use(PrimeVue);
 app.use(ConfirmationService);
+app.use(ToastService);
 app.component("Button", Button);
 app.component("InputNumber", InputNumber);
 app.component("Panel", Panel);
@@ -31,5 +36,8 @@ app.component("Calendar", Calendar);
 app.component("Dropdown", Dropdown);
 app.component("Dialog", Dialog);
 app.component("ConfirmDialog", ConfirmDialog);
+app.component("FileUpload", FileUpload);
+app.component("OverlayPanel", OverlayPanel);
+app.directive('tooltip', Tooltip);
 
 app.mount('#app')
