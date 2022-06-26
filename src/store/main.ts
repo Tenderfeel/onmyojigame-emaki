@@ -1,5 +1,19 @@
 import { defineStore } from 'pinia'
 import moment from 'moment'
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDoc,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+  where,
+  Timestamp,
+} from 'firebase/firestore';
+
+import {useUserStore} from './user'
 
 moment.locale('ja');
 
@@ -40,6 +54,11 @@ export type PartsData = {
   large: number
 }
 
+/**
+ * Get log data from Window.LocalStorage
+ * @param key 
+ * @param initialValue 
+ */
 function getStorage(key: string, initialValue: number | Log[] | ServerData) {
   const data = localStorage.getItem(key)
   if (data === undefined || data === null) {
@@ -48,18 +67,38 @@ function getStorage(key: string, initialValue: number | Log[] | ServerData) {
   return JSON.parse(data)
 }
 
+type Season = {
+  name: string
+  startAt: Date
+  endAt: Date
+  period: string
+}
 
 export const useStore = defineStore('main', {
-  state: () => {
+  
+  state:  () => {
+
+    // return {
+    //   // 小
+    //   small: getStorage(`${STORAGE_KEY}.small`, 0),
+    //   // 中
+    //   medium: getStorage(`${STORAGE_KEY}.medium`, 0),
+    //   // 大
+    //   large: getStorage(`${STORAGE_KEY}.large`, 0),
+    //   // ログ
+    //   logs: getStorage(`${STORAGE_KEY}.logs`, []),
+    // }
     return {
       // 小
-      small: getStorage(`${STORAGE_KEY}.small`, 0),
+      small: 0,
       // 中
-      medium: getStorage(`${STORAGE_KEY}.medium`, 0),
+      medium: 0,
       // 大
-      large: getStorage(`${STORAGE_KEY}.large`, 0),
+      large: 0,
       // ログ
-      logs: getStorage(`${STORAGE_KEY}.logs`, []),
+      logs: [] as Log[],
+
+      currentSeason: null as Season | null
     }
   },
   getters: {
@@ -124,19 +163,54 @@ export const useStore = defineStore('main', {
           large: 0
         })
     },
-
-    /**
-     * ログのフォーマット
-     */
-    formatLogs(): Log[] {
-      return this.logs.map((log: Log) => {
-        log.date = new Date(log.date)
-        return log
-      })
-    }
   },
 
   actions: {
+    async setup() {
+      const date = new Date()
+
+      console.log('store, setup')
+      const seasonQuery = query(
+        collection(getFirestore(), 'season'), 
+        where('startAt', '<=', date),
+        limit(1)
+      )
+  
+      // 絵巻シーズン
+      onSnapshot(seasonQuery, (snapshot) => {
+        console.log('seasonQuery')
+        snapshot.docChanges().forEach((change) => {
+          const data = change.doc.data()
+          console.log('season', data)
+          this.$patch((state) => {
+            state.currentSeason = {
+              name: data.name,
+              period: data.period,
+              startAt: (new Timestamp(data.startAt.seconds, data.startAt.nanoseconds)).toDate(),
+              endAt: (new Timestamp(data.endAt.seconds, data.endAt.nanoseconds)).toDate(),
+            }
+          })
+        })
+      })
+
+      const recentLogsQuery = query(collection(getFirestore(), 'logs'), orderBy('timestamp', 'desc'), limit(50));
+
+      onSnapshot(recentLogsQuery, function(snapshot) {
+        snapshot.docChanges().forEach(async function(change) {
+          if (change.type === 'removed') {
+            console.log(change.doc.id);
+          } else {
+            const log = change.doc.data();
+            const seasonSnapshot = await getDoc(log.season);
+            if (seasonSnapshot.exists()) {
+              const season = seasonSnapshot.data()
+              console.log('log.season', season)
+            }
+            console.log('log', change.doc.id, log);
+          }
+        });
+      });
+    },
     /**
      * LocalStorageへの保存
      */
@@ -154,33 +228,54 @@ export const useStore = defineStore('main', {
     /**
      * 入力ログの追加
      */
-    addInputLog() {
-      this.logs.unshift({
-        small: this.small,
-        medium: this.medium,
-        large: this.large,
-        charge: false,
-        used: false,
-        server: 0,
-        active: false,
-        date: moment().toString()
-      })
-      this.save()
+    async addInputLog() {
+      // const date = moment().toString()
+      // this.logs.unshift({
+      //   small: this.small,
+      //   medium: this.medium,
+      //   large: this.large,
+      //   charge: false,
+      //   used: false,
+      //   server: 0,
+      //   active: false,
+      //   date
+      // })
+      // this.save()
+      const timestamp = moment().toString()
+      const user = useUserStore()
+      try {
+        await addDoc(collection(getFirestore(), 'logs'), {
+          small: this.small,
+          medium: this.medium,
+          large: this.large,
+          charge: false,
+          used: false,
+          server: 0,
+          active: false,
+          uid: user.uid,
+          timestamp
+        });
+        return { severity:'success' as const, summary: 'Success', detail: 'ログを保存しました'}
+      } catch (e) {
+        console.error('Error writing new message to Firebase Database', e);
+
+        return { severity:'error' as const, summary: 'Error', detail: 'ログの保存に失敗しました'}
+      }
     },
     /**
      * ログの削除
      */
     deleteLog(index: number) {
-      this.logs.splice(index, 1)
-      this.save()
+      // this.logs.splice(index, 1)
+      // this.save()
     },
 
     /**
      * ログの追加
      */
     addLog(log: Log) {
-      this.logs.unshift(log)
-      this.save()
+      // this.logs.unshift(log)
+      // this.save()
     },
 
     /**
@@ -195,3 +290,5 @@ export const useStore = defineStore('main', {
     }
   }
 })
+
+type mainStore = ReturnType<typeof useStore>

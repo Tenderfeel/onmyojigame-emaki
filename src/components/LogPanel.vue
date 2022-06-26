@@ -8,10 +8,10 @@
       <div v-if="!store.logs.length" style="color: var(--gray-200)">記録がありません</div>
 
       <template v-else>
-        <Inplace v-for="(log, index) in store.formatLogs" :key="index" :active="log.active" class="log">
+        <Inplace v-for="(log, index) in store.logs" :key="index" :active="log.active" class="log">
           <template #display>
             <div class="col-12 md:col-5 pb-0 md:py-0">
-              <FormatDate :value="log.date" class="mr-2" />
+              <time :datetime="log.date">{{formatDate(log.date)}}</time>
               <Tag v-if="log.server" severity="danger">{{log.server}}</Tag>
               <i v-if="log.charge" class="pi pi-credit-card mr-1 text-yellow-300"></i>
             </div>
@@ -50,7 +50,7 @@
               </div>
               <div class="mr-2">
               <!-- 閉じるボタン -->
-              <Button icon="pi pi-times" class="p-button-secondary p-button-outlined" @click="log.active = false" />
+              <Button icon="pi pi-times" class="p-button-secondary p-button-outlined" @click="onEditClose(log)" />
             </div>
             </div>
           </template>
@@ -100,8 +100,23 @@
 
 <script setup lang="ts">
 import { useStore, Log, defaultLog } from '../store/main'
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import Inplace from './Inplace.vue'
+import moment from 'moment'
+import {
+  getFirestore,
+  collection,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+  addDoc,
+  setDoc,
+  updateDoc,
+  doc,
+  serverTimestamp,
+} from 'firebase/firestore';
+
 
 const store = useStore()
 const servers = new Array(6).fill(null).map((n, i) => ({ name: i + 1, value: i + 1 }))
@@ -115,6 +130,10 @@ const useLog = ref<Log>({
 const chargeLog = ref<Log>({
   ...defaultLog
 })
+
+const formatDate = (date: string) => {
+  return moment(date).format('YYYY/MM/DD HH:mm:ss')
+}
 
 const openUsedModal = () => {
   displayUsedModal.value = true;
@@ -130,9 +149,13 @@ const closeChargeModal = () => {
   displayChargeModal.value = false;
 };
 
+const onEditClose= (log: Log) => {
+  log.active = false
+  store.save()
+}
+
 // ログ削除
 const deleteLog = (log: Log, index: number) => {
-  console.log(deleteLog)
   store.deleteLog(index)
 }
 
@@ -186,14 +209,14 @@ const addChargeLog = () => {
   chargeLog.value = {...defaultLog}
   closeChargeModal()
 }
+
+
 </script>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import FormatDate from './FormatDate.vue'
 export default defineComponent({
   components: {
-    FormatDate,
     Inplace
   }
 })
