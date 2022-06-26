@@ -50,7 +50,7 @@
               </div>
               <div class="mr-2">
               <!-- 閉じるボタン -->
-              <Button icon="pi pi-times" class="p-button-secondary p-button-outlined" @click="log.active = false" />
+              <Button icon="pi pi-times" class="p-button-secondary p-button-outlined" @click="onClose(log)" />
             </div>
             </div>
           </template>
@@ -185,6 +185,11 @@ const addChargeLog = () => {
   })
   chargeLog.value = {...defaultLog}
   closeChargeModal()
+}
+
+const onClose = (log: Log) => {
+  log.active = false
+  store.save()
 }
 </script>
 

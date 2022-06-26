@@ -95,11 +95,14 @@ export const useStore = defineStore('main', {
      * 本日獲得数
      */
     dayTotal(): PartsData {
-      return this.logs.filter((log: Log) => moment(log.date).isSame(moment(), 'day') && !log.used && !log.charge )
-        .reduce((acc: PartsData, cur: Log) => {
-          acc.small += cur.small
-          acc.medium += cur.medium
-          acc.large += cur.large
+      const todayLogs =  this.logs.filter((log: Log) => moment(log.date).isSame(moment(), 'day') && !log.used && !log.charge )
+      const lastYesterdayLog = this.logs.filter((log: Log) => !log.used && !log.charge)[todayLogs.length]
+      
+      return todayLogs.reduce((acc: PartsData, cur: Log, index: number, logs: Log[]) => {
+          const next = logs[index + 1] || lastYesterdayLog
+          acc.small += cur.small - next.small
+          acc.medium += cur.medium - next.medium
+          acc.large += cur.large - next.large
           return acc
         }, {
           small: 0,
